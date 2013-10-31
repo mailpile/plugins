@@ -1,0 +1,26 @@
+{
+	"plugin": "force-grapher",
+	"name": "Use The Force, Grapher",
+	"created": "2013-10-31",
+	"updated": "2013-10-31",
+	"creator": "Smári McCarthy, Brennan Novak",
+	"categories": [
+	  "data visualization",
+	  "graphs",
+	  "force directed",
+	  "inbox"
+	],
+	"navigation": [
+    "sub-navigation"
+	],
+	"views": [
+    "search"
+	],
+	"urls":{
+		"default": "/force-grapher"
+	},
+	"python": "false",
+	"css": "true",
+	"javscript": "true",
+	"html": "true"
+}
