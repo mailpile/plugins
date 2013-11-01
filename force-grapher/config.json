@@ -5,6 +5,7 @@
 	"updated": "2013-10-31",
 	"creator": "Smári McCarthy, Brennan Novak",
 	"categories": [
+	  "interfaces",
 	  "data visualization",
 	  "graphs",
 	  "force directed",
@@ -19,8 +20,10 @@
 	"urls":{
 		"default": "/force-grapher"
 	},
-	"python": "false",
-	"css": "true",
-	"javscript": "true",
-	"html": "true"
+	"components": {
+	  "python": "false",
+	  "css": "true",
+	  "javscript": "true",
+	  "html": "true"
+  }
 }

@@ -1,7 +1,6 @@
 /* The Force Grapher
     - Renders your inbox as a force directed graph
     - Built using D3
-    - 
 */
 
 MailPile.prototype.results_graph = function() {
@@ -27,9 +26,8 @@ MailPile.prototype.results_graph = function() {
   $('#pile-graph-canvas').height(available_height);
   $("#pile-graph-canvas-svg").attr('height', available_height).height(available_height);
 
-	args = $('#pile-graph-canvas-svg').data("searchterms");
-
-	d3.json("/api/0/shownetwork/?q=" + args, function(graph) {
+  // Load Network Data
+	d3.json("/api/0/shownetwork/?q=" + mailpile.instance.search_terms, function(graph) {
 		graph = graph.result;
 		console.log(graph);
     

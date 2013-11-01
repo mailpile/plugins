@@ -1,0 +1,25 @@
+{
+	"plugin": "maildeck",
+	"name": "MailDeck",
+	"created": "2013-10-31",
+	"updated": "2013-10-31",
+	"creator": "Brennan Novak",
+	"categories": [
+	  "interfaces",
+	  "social media",
+	  "inbox"
+	],
+	"navigation": [
+    "sub-navigation"
+	],
+	"views": [
+    "search"
+	],
+	"urls":{},
+	"components": {
+	  "python": "true",
+	  "css": "true",
+	  "javscript": "true",
+	  "html": "true"
+  }
+}
