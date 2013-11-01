@@ -10,3 +10,6 @@ There is also the shell of a plugin called MailDeck, which will someday allow us
 Really, right now the plugins is not even half baked, it's like an eight baked- we just created this repo and started moving code here so we can see how plugins will take shape.
 
 
+### Use Plugins
+
+To install this barely baked version of plugins: clone this repo into your /static/default/ folder and VOILA, should work!
