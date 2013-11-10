@@ -1,19 +1,24 @@
 {
-	"plugin": "maildeck",
-	"name": "MailDeck",
-	"created": "2013-10-31",
-	"updated": "2013-10-31",
+	"plugin": "media-message",
+	"name": "Media Message",
+	"created": "2013-11-10",
+	"updated": "2013-11-10",
 	"creators": ["Brennan Novak <hi@bnvk.me>"],
 	"categories": [
-	  "interfaces",
-	  "social media",
-	  "inbox"
+	  "media",
+	  "video",
+	  "audio",
+	  "recording",
+	  "message",
+	  "messages",
+	  "voicemail",
+	  "videomail"
 	],
 	"navigation": [
     "sub-navigation"
 	],
 	"views": [
-    "search"
+    "message"
 	],
 	"urls":{},
 	"components": {

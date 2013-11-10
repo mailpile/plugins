@@ -3,7 +3,7 @@
 	"name": "Use The Force, Grapher",
 	"created": "2013-10-31",
 	"updated": "2013-10-31",
-	"creator": "Smári McCarthy, Brennan Novak",
+	"creators": ["Smári McCarthy <smari@mailpile.is>", "Brennan Novak <hi@bnvk.me>"],	
 	"categories": [
 	  "interfaces",
 	  "data visualization",
