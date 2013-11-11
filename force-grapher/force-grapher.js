@@ -1,4 +1,4 @@
-/* The Force Grapher
+/* Use The Force, Grapher
     - Renders your inbox as a force directed graph
     - Built using D3
 */
