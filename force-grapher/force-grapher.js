@@ -1,113 +1,115 @@
 /* Use The Force, Grapher
-    - Renders your inbox as a force directed graph
+    - Renders your current search result set as a force directed graph
     - Built using D3
 */
 
 MailPile.prototype.results_graph = function() {
+    // Change Navigation 
+    $('#btn-display-graph').addClass('navigation-on');
+    $('#btn-display-list').removeClass('navigation-on');
 
-  // Change Navigation 
-	$('#btn-display-graph').addClass('navigation-on');
-	$('#btn-display-list').removeClass('navigation-on');
+    // Show & Hide Pile View
+    $('#pile-results').hide('fast', function() {
+        $('#form-pile-results').hide('fast');
+        //$('.pile-speed').hide('fast');
+        //$('#footer').hide('fast');
+        //$('#sidebar').hide('fast');
+        $('#pile-graph').hide().delay(1000).show();
+    });
 
-	// Show & Hide Pile View
-	$('#pile-results').hide('fast', function() {
+    // Determine & Set Height
+    var available_height = $(window).height() - ($('#header').height() + $('.sub-navigation').height());
+    var available_width = $("#content-view").width();
 
-	  $('#form-pile-results').hide('fast');
-    $('.pile-speed').hide('fast');
-    $('#footer').hide('fast');
-    $('#sidebar').hide('fast');
+    $('#pile-graph-canvas').height(available_height);
+    $('#pile-graph-canvas').width(available_width);
+    $("#pile-graph-canvas-svg").attr('height', available_height).height(available_height);
 
-	  $('#pile-graph').hide().delay(1000).show();
-	});
+    // Load Network Data
+    d3.json("/api/0/shownetwork/?q=" + mailpile.instance.search_terms, function(graph) {
+        graph = graph.result;
 
-  // Determine & Set Height
-  var available_height = $(window).height() - ($('#header').height() + $('.sub-navigation').height());
+        var width = available_width;
+        var height = available_height;
+        var force = d3.layout.force()
+                    .charge(-300)
+                    .linkDistance(100)
+                    .gravity(0.02)
+                    .size([width, height]);
 
-  $('#pile-graph-canvas').height(available_height);
-  $("#pile-graph-canvas-svg").attr('height', available_height).height(available_height);
+        var svg = d3.select("#pile-graph-canvas-svg");
+        $("#pile-graph-canvas-svg").empty();
 
-  // Load Network Data
-	d3.json("/api/0/shownetwork/?q=" + mailpile.instance.search_terms, function(graph) {
-		graph = graph.result;
-		console.log(graph);
-    
-    console.log(available_height);
-    				
-		var width = 640; // $("#pile-graph-canvas").width();
-		var height = available_height;
-		var force = d3.layout.force()
-	   				.charge(-300)
-	   				.linkDistance(75)
-	   				.size([width, height]);
+        var color = d3.scale.category20();
 
-		var svg = d3.select("#pile-graph-canvas-svg");
-		$("#pile-graph-canvas-svg").empty();
+        var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .text("a simple tooltip");
 
-		var color = d3.scale.category20();
+        force
+            .nodes(graph.nodes)
+            .links(graph.links)
+            .start();
 
-		var tooltip = d3.select("body")
-		    .append("div")
-	    	.style("position", "absolute")
-	    	.style("z-index", "10")
-	    	.style("visibility", "hidden")
-	    	.text("a simple tooltip");
+        var link = svg.selectAll(".link")
+            .data(graph.links)
+            .enter().append("line")
+            .style("stroke", "#000")
+            .style("stroke-width", function(d) { return Math.sqrt(3*d.value); });
 
-		force
-			.nodes(graph.nodes)
-	    	.links(graph.links)
-	    	.start();
+        var node = svg.selectAll(".node")
+              .data(graph.nodes)
+              .enter().append("g")
+              .attr("class", "node")
+              .call(force.drag);
 
-		var link = svg.selectAll(".link")
-			.data(graph.links)
-			.enter().append("line")
-			.attr("class", "link")
-			.style("stroke-width", function(d) { return Math.sqrt(3*d.value); });
+        node.append("circle")
+            .attr("r", 8)
+            .style("fill", function(d) { return color("#3a6b8c"); })
 
-		var node = svg.selectAll(".node")
-		      .data(graph.nodes)
-			  .enter().append("g")
-		      .attr("class", "node")
-		      .call(force.drag);
+        node.append("text")
+            .attr("x", 12)
+            .attr("dy", "0.35em")
+            .style("opacity", "0.3")
+            .text(function(d) { return d.email; });
 
-		node.append("circle")
-			.attr("r", 8)
-		    .style("fill", function(d) { return color("#3a6b8c"); })
+        link.append("text").attr("x", 12).attr("dy", ".35em").text(function(d) { return d.type; })
 
-	    node.append("text")
-	    	.attr("x", 12)
-	    	.attr("dy", "0.35em")
-	    	.style("opacity", "0.3")
-	    	.text(function(d) { return d.email; });
+        node.on("click", function(d, m, q) {
+            // d.attr("toggled", !d.attr("toggled"));
+            // d.style("color", "#f00");
+            if (mailpile.graphselected.indexOf(d["email"]) < 0) {
+                d3.select(node[q][m]).selectAll("circle").style("fill", "#4b7945");
+                mailpile.graphselected.push(d["email"]);
+            } else {
+                mailpile.graphselected.pop(d["email"]);
+                d3.select(node[q][m]).selectAll("circle").style("fill", "#3a6b8c");
+            }
+            mailpile.graph_actionbuttons();
+        });
+        node.on("mouseover", function(d, m, q) {
+            d3.select(node[q][m]).selectAll("text").style("opacity", "1");
+        });
+        node.on("mouseout", function(d, m, q) {
+            d3.select(node[q][m]).selectAll("text").style("opacity", "0.2");
+        });
 
-	    link.append("text").attr("x", 12).attr("dy", ".35em").text(function(d) { return d.type; })
-
-	   	node.on("click", function(d, m, q) {
-	   		// d.attr("toggled", !d.attr("toggled"));
-	   		// d.style("color", "#f00");
-	   		if (mailpile.graphselected.indexOf(d["email"]) < 0) {
-		   		d3.select(node[q][m]).selectAll("circle").style("fill", "#4b7945");
-		   		mailpile.graphselected.push(d["email"]);
-	   		} else {
-	   			mailpile.graphselected.pop(d["email"]);
-	   			d3.select(node[q][m]).selectAll("circle").style("fill", "#3a6b8c");
-	   		}
-	   		mailpile.graph_actionbuttons();
-	   	});
-		node.on("mouseover", function(d, m, q) {
-			d3.select(node[q][m]).selectAll("text").style("opacity", "1");
-		});
-		node.on("mouseout", function(d, m, q) {
-			d3.select(node[q][m]).selectAll("text").style("opacity", "0.3");
-		});
-
-		force.on("tick", function() {
-			link.attr("x1", function(d) { return d.source.x; })
-			    .attr("y1", function(d) { return d.source.y; })
-			    .attr("x2", function(d) { return d.target.x; })
-			    .attr("y2", function(d) { return d.target.y; });
-
-			node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-		});
-	});
+        force.on("tick", function() {
+            node.attr("transform", function(d) {
+                if (d.x < 0) { d.x = 0; }
+                if (d.y < 0) { d.y = 0; }
+                if (d.x > width) { d.x = width; }
+                if (d.y > height) { d.y = height; }
+                return "translate(" + d.x + "," + d.y + ")";
+            });
+            link.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+        });
+    });
 
 }

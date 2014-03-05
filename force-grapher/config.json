@@ -12,7 +12,7 @@
 	  "inbox"
 	],
 	"navigation": [
-    "sub-navigation"
+      "sub-navigation"
 	],
 	"views": [
     "search"
@@ -21,7 +21,7 @@
 		"default": "/force-grapher"
 	},
 	"components": {
-	  "python": "false",
+	  "python": "true",
 	  "css": "true",
 	  "javscript": "true",
 	  "html": "true"
